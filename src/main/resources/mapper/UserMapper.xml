@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yqg.mapper.UserMapper">
+    <select id="getUserByAccount" resultType="com.yqg.vo.User">
+        select * from user where user_name = #{account}
+        or user_id = #{account} or email = #{account}
+    </select>
+    <select id="checkUserStatus" resultType="long">
+        select status from user
+        where user_id = #{userId}
+    </select>
+    <insert id="addUserOne" parameterType="com.yqg.vo.User" useGeneratedKeys="true" keyProperty="userId">
+        insert into user(user_id,user_name,user_avatar_url,password,status,email,role_id,
+                         create_time,login_times,integral)
+        values(#{userId},#{userName},#{userAvatarUrl},#{password},#{status}
+              ,#{email},#{roleId},#{createTime},#{loginTimes},#{integral});
+    </insert>
+    <update id="updateUserStatus" flushCache="true" timeout="20">
+        update user
+        set status = #{status}
+        where user_id = #{userId}
+    </update>
+    <update id="updateUserLoginTimes" flushCache="true" timeout="20">
+        update user
+        set login_times = login_times + 1
+        where user_id = #{userId}
+    </update>
+</mapper>

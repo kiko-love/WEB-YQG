@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yqg.mapper.ResourceMapper">
+    <select id="getUploadResources" resultType="com.yqg.vo.UploadResource">
+        select * from resources where id in
+        <foreach collection="resourceIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into resources (id, user_id,title,description,
+                               tags,fee,fee_count,status,view_count
+        ,comment_count,like_count, create_time, update_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.userId},#{item.title},#{item.description},
+            #{item.tags},#{item.fee},#{item.feeCount},#{item.status},#{item.viewCount},
+            #{item.commentCount},#{item.likeCount},#{item.createTime},#{item.updateTime})
+        </foreach>
+    </insert>
+
+    <update id="updateStatusById" >
+        update resources set status = #{status} where id = #{id}
+    </update>
+
+
+</mapper>
