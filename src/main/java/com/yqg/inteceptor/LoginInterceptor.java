@@ -1,9 +1,5 @@
 package com.yqg.inteceptor;
 
-import com.alibaba.fastjson.JSONObject;
-import com.yqg.R.NomalEnum;
-import com.yqg.R.Result;
-import com.yqg.R.ResultEnum;
 import com.yqg.utils.RedisUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,31 +40,31 @@ public class LoginInterceptor implements HandlerInterceptor {
         response.setCharacterEncoding("UTF-8");
 
          //检查是否存在 Token
-        if (token == null || token.isEmpty()) {
-            Result<Object> r = new Result<>();
-            r.setCode(ResultEnum.AUTHOR_EXPIRE_LACK.getCode());
-            r.setMsg(ResultEnum.AUTHOR_EXPIRE_LACK.getMsg());
-            response.getWriter().write(JSONObject.toJSONString(r));
-            return false;
-        }
-        // 检查是否存在 userId
-        if (userId == null || userId.isEmpty()) {
-            Result<Object> r = new Result<>();
-            r.setCode(ResultEnum.AUTHOR_PARAMS_LACK.getCode());
-            r.setMsg(ResultEnum.AUTHOR_PARAMS_LACK.getMsg());
-            response.getWriter().write(JSONObject.toJSONString(r));
-            return false;
-        }
-
-        // 解析 Token
-        Object o =  redisUtils.get(NomalEnum.LOGIN_TOKEN_PREFIX + userId);
-        if (o == null) {
-            Result<Object> r = new Result<>();
-            r.setCode(ResultEnum.AUTHOR_FAILED.getCode());
-            r.setMsg(ResultEnum.AUTHOR_FAILED.getMsg());
-            response.getWriter().write(JSONObject.toJSONString(r));
-            return false;
-        }
+//        if (token == null || token.isEmpty()) {
+//            Result<Object> r = new Result<>();
+//            r.setCode(ResultEnum.AUTHOR_EXPIRE_LACK.getCode());
+//            r.setMsg(ResultEnum.AUTHOR_EXPIRE_LACK.getMsg());
+//            response.getWriter().write(JSONObject.toJSONString(r));
+//            return false;
+//        }
+//        // 检查是否存在 userId
+//        if (userId == null || userId.isEmpty()) {
+//            Result<Object> r = new Result<>();
+//            r.setCode(ResultEnum.AUTHOR_PARAMS_LACK.getCode());
+//            r.setMsg(ResultEnum.AUTHOR_PARAMS_LACK.getMsg());
+//            response.getWriter().write(JSONObject.toJSONString(r));
+//            return false;
+//        }
+//
+//        // 解析 Token
+//        Object o =  redisUtils.get(NomalEnum.LOGIN_TOKEN_PREFIX + userId);
+//        if (o == null) {
+//            Result<Object> r = new Result<>();
+//            r.setCode(ResultEnum.AUTHOR_FAILED.getCode());
+//            r.setMsg(ResultEnum.AUTHOR_FAILED.getMsg());
+//            response.getWriter().write(JSONObject.toJSONString(r));
+//            return false;
+//        }
         return true;
     }
 

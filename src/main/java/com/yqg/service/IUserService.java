@@ -9,18 +9,6 @@ import java.util.List;
  */
 public interface IUserService {
 
-    /**
-     * 获取用户列表
-     * @return
-     */
-    List<User> getUserList();
-
-    /**
-     * 通过用户名获取用户信息（此处用户名可以同时为userID，userName。email）
-     * @param account
-     * @return
-     */
-    User getUserByAccount(String account);
 
     /**
      * 检测用户账号状态
@@ -37,4 +25,17 @@ public interface IUserService {
      * @return
      */
     int updateUserLoginTimes(User user);
+    /**
+     * 获取所有用户
+     * @return
+     */
+    List<User> getAllUser();
+
+    /**
+     * 通过用户id删除用户
+     * @param userId
+     * @return
+     */
+    int deleteUserById(String userId);
+
 }

@@ -39,14 +39,53 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private RedisUtils redisUtils;
 
+
+    public String adminDeleteUser(String userId) {
+        int i = userMapper.deleteUser(userId);
+        if (i > 0) {
+            return Result.success(null);
+        } else {
+            return Result.error("删除失败");
+        }
+    }
+
+    public String adminAddUser(User user) {
+        User userByAccount = userMapper.getUserByAccount(user.getUserId());
+        if (userByAccount != null) {
+            return Result.error("账号已存在");
+        }
+        user.setUserId(String.valueOf(IdUtil.getSnowflake(1, 1).nextId()));
+        user.setCreateTime(String.valueOf(DateUtil.current()));
+        user.setUserExp(0);
+        user.setIntegral(0);
+        user.setLoginTimes(0);
+        user.setStatus(0);
+        user.setUserAvatarUrl("https://picx.zhimg.com/80/v2-9fa756b8c2eaaea33b8da2d48b95b60c_720w.webp?source=1940ef5c");
+        if (userMapper.insert(user) > 0) {
+            return Result.success("用户添加成功");
+        } else {
+            return Result.error("用户添加失败");
+        }
+    }
+
+    public String updateUserStatus(String userId, Integer status) {
+        int i = userMapper.updateUserStatus(status, userId);
+        if (i > 0) {
+            return Result.success(null);
+        } else {
+            return Result.error("更新失败");
+        }
+    }
+
+
     /**
      * 获取全部用户列表
      *
      * @return 用户列表
      */
-    @Override
-    public List<User> getUserList() {
-        return userMapper.selectList(null);
+
+    public String getUserList() {
+        return Result.success(userMapper.selectList(null));
     }
 
     /**
@@ -55,7 +94,6 @@ public class UserServiceImpl implements IUserService {
      * @param account
      * @return
      */
-    @Override
     public User getUserByAccount(String account) {
         return userMapper.getUserByAccount(account);
     }
@@ -80,6 +118,26 @@ public class UserServiceImpl implements IUserService {
     @Override
     public int updateUserLoginTimes(User user) {
         return userMapper.updateUserLoginTimes(user);
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        return userMapper.getAllUser();
+    }
+
+    @Override
+    public int deleteUserById(String userId) {
+        return userMapper.deleteUser(userId);
+    }
+
+
+    public String updateUser(User user) {
+        int i = userMapper.updateUser(user);
+        if (i > 0) {
+            return Result.success(user);
+        } else {
+            return Result.error("更新失败");
+        }
     }
 
     /**
@@ -212,7 +270,7 @@ public class UserServiceImpl implements IUserService {
             r.setCode(ResultEnum.ACCOUNT_ALREADY_EXISTS.getCode());
             r.setMsg(ResultEnum.ACCOUNT_ALREADY_EXISTS.getMsg());
             return JSONObject.toJSONString(r);
-        } else if (userMapper.getUserByAccount(user.getEmail())!=null) {
+        } else if (userMapper.getUserByAccount(user.getEmail()) != null) {
             r.setCode(ResultEnum.ACCOUNT_EMAIL_EXISTS.getCode());
             r.setMsg(ResultEnum.ACCOUNT_EMAIL_EXISTS.getMsg());
             return JSONObject.toJSONString(r);

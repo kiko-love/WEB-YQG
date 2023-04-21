@@ -27,4 +27,30 @@
         set login_times = login_times + 1
         where user_id = #{userId}
     </update>
+    <select id="getAllUser" resultType="com.yqg.vo.User">
+        select * from user
+    </select>
+    <delete id="deleteUser" flushCache="true" timeout="20" parameterType="string">
+        delete from user
+        where user_id = #{userId}
+    </delete>
+    <update id="updateUser" parameterType="com.yqg.vo.User">
+        UPDATE
+        user
+        <set>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userAvatarUrl != null">user_avatar_url = #{userAvatarUrl},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="userDes != null">user_des = #{userDes},</if>
+            <if test="userExp != null">user_exp = #{userExp},</if>
+            <if test="userTags != null">user_tags = #{userTags},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="roleId != null">role_id = #{roleId},</if>
+            <if test="loginTimes != null">login_times = #{loginTimes},</if>
+            <if test="integral != null">integral = #{integral},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
 </mapper>

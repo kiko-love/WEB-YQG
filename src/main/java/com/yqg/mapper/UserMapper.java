@@ -5,6 +5,8 @@ import com.yqg.vo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author KIKO
  */
@@ -49,5 +51,27 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     int updateUserLoginTimes(User user);
+
+    /**
+     * 获取所有用户
+     * @return
+     */
+    List<User> getAllUser();
+
+    /**
+     * 通过用户id删除用户
+     * @param userId
+     * @return
+     */
+    int deleteUser(String userId);
+
+    /**
+     * 更新用户信息
+     *
+     * @param user
+     * @return
+     */
+    int updateUser(User user);
+
 
 }

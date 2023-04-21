@@ -13,7 +13,7 @@ public class UserBase {
     String userName;
     String userAvatarUrl;
     String userDes;
-    String userExp;
+    Integer userExp;
     String userTags;
     Integer integral;
     /**
