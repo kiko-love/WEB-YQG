@@ -1,6 +1,5 @@
 package com.yqg.service.impl;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.yqg.R.Result;
 import com.yqg.mapper.ArticleMapper;
@@ -54,8 +53,6 @@ public class ArticleServiceImpl implements IArticleService {
                     .getSnowflake(1, 1).nextId()));
             article.setCoverImage("https://vitejs.dev/logo-with-shadow.png");
             String summary = article.getContent().substring(0, 100);
-            article.setSummary(summary);
-            article.setCreateTime(String.valueOf(DateUtil.current()));
             article.setUpdateTime(article.getCreateTime());
             article.setAudit(0);
             article.setLikeCount(0);
