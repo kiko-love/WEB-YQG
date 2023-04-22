@@ -1,5 +1,7 @@
 package com.yqg.mapper;
 
+import com.yqg.vo.Article;
+import com.yqg.vo.DetailArticle;
 import com.yqg.vo.RecommendArticle;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -23,4 +25,28 @@ public interface ArticleMapper {
      * @return 文章列表
      */
     List<RecommendArticle> getRandomArticle(Integer num);
+
+    /**
+     * 获取文章内容
+     *
+     * @param articleId
+     * @return
+     */
+    DetailArticle getArticleContent(String articleId);
+
+    /**
+     * 获取文章列表
+     * @param article
+     * @return
+     */
+    int addArticle(Article article);
+
+    /**
+     * 更新文章审核状态
+     *
+     * @param articleId
+     * @param audit
+     * @return
+     */
+    int updateAudit(String articleId, Integer audit);
 }

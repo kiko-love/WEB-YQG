@@ -5,8 +5,17 @@
 <mapper namespace="com.yqg.mapper.ArticleMapper">
 
     <select id="getRandomArticle" resultMap="recommendArticleWithUserResultMap">
-        SELECT ra.*, u.user_id, u.user_name, u.email, u.user_avatar_url, u.user_des,
-               u.user_exp, u.user_tags, u.status, u.login_times, u.integral
+        SELECT ra.*,
+               u.user_id,
+               u.user_name,
+               u.email,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.status,
+               u.login_times,
+               u.integral
         FROM article ra
                  JOIN user u ON ra.user_id = u.user_id
         ORDER BY RAND()
@@ -36,7 +45,7 @@
         <result property="summary" column="summary"/>
         <result property="content" column="content"/>
         <result property="coverImage" column="cover_image"/>
-        <result property="lickCount" column="lick_count"/>
+        <result property="likeCount" column="like_count"/>
         <result property="readCount" column="read_count"/>
         <result property="commentCount" column="comment_count"/>
         <result property="tags" column="tags"/>
@@ -58,6 +67,67 @@
             <result property="integral" column="integral"/>
         </association>
     </resultMap>
+
+    <select id="getArticleContent" resultMap="articleWithUserResultMap">
+        SELECT a.*,
+               u.user_id,
+               u.user_name,
+               u.email,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.status,
+               u.login_times,
+               u.integral
+        FROM article a
+                 JOIN user u ON a.user_id = u.user_id
+        WHERE a.article_id = #{articleId}
+    </select>
+
+    <resultMap id="articleWithUserResultMap" type="com.yqg.vo.DetailArticle">
+        <id property="articleId" column="article_id"/>
+        <result property="title" column="title"/>
+        <result property="summary" column="summary"/>
+        <result property="content" column="content"/>
+        <result property="coverImage" column="cover_image"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="readCount" column="read_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="tags" column="tags"/>
+        <result property="userId" column="user_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="audit" column="audit"/>
+
+        <association property="user" javaType="com.yqg.vo.User">
+            <id property="userId" column="user_id"/>
+            <result property="userName" column="user_name"/>
+            <result property="email" column="email"/>
+            <result property="userAvatarUrl" column="user_avatar_url"/>
+            <result property="userDes" column="user_des"/>
+            <result property="userExp" column="user_exp"/>
+            <result property="userTags" column="user_tags"/>
+            <result property="status" column="status"/>
+            <result property="loginTimes" column="login_times"/>
+            <result property="integral" column="integral"/>
+        </association>
+    </resultMap>
+
+    <insert id="addArticle" parameterType="com.yqg.vo.Article">
+        INSERT INTO article (article_id, title, summary, content, cover_image,
+                             like_count, read_count, comment_count, tags,
+                             user_id,
+                             create_time, update_time, audit)
+        VALUES (#{articleId},#{title}, #{summary}, #{content}, #{coverImage}, #{likeCount}, #{readCount}, #{commentCount}, #{tags},
+                #{userId}, #{createTime}, #{updateTime}, #{audit})
+    </insert>
+
+    <update id="updateAudit" parameterType="string">
+        UPDATE article
+        SET audit = #{audit}
+        WHERE article_id = #{articleId}
+    </update>
 
 
 </mapper>

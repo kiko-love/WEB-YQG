@@ -1,5 +1,6 @@
 package com.yqg.service;
 
+import com.yqg.vo.Article;
 import com.yqg.vo.RecommendArticle;
 
 import java.util.List;
@@ -23,5 +24,20 @@ public interface IArticleService {
      * @return
      */
     List<RecommendArticle> getRandomArticle(Integer num);
+    /**
+     * 获取文章列表
+     * @param article
+     * @return
+     */
+    int addArticle(Article article);
+
+    /**
+     * 更新文章审核状态
+     *
+     * @param articleId
+     * @param audit
+     * @return
+     */
+    int updateAudit(String articleId, Integer audit);
 
 }

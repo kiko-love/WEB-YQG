@@ -65,10 +65,11 @@ public class UserArticleOperationServiceImpl implements IUserArticleOperationSer
             articleList = articleService.getRandomArticle(num);
         } else {
             articleList = articleService.getArticles(recommendList);
+            //随机排列articleList的元素
+            articleList = articleList.stream().sorted((a, b) -> Math.random() > 0.5 ? 1 : -1)
+                    .collect(Collectors.toList());
+            articleList = convertTagsStringToList(articleList);
         }
-        //随机排列articleList的元素
-        articleList = articleList.stream().sorted((a, b) -> Math.random() > 0.5 ? 1 : -1).collect(Collectors.toList());
-        articleList = convertTagsStringToList(articleList);
         return Result.success(articleList);
     }
 

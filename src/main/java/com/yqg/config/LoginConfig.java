@@ -49,7 +49,7 @@ public class LoginConfig implements WebMvcConfigurer {
                 "/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg",
                 "/**/*.jpeg", "/**/*.gif", "/**/fonts/*", "/**/*.svg",
                 "/**/*.html", "/login/**", "/register/**", "/api/socket/**","/image/**",
-                "/article/list/**","/admin/**"
+                "/article/list/**","/admin/**","/tags/**"
         };
         registry.addInterceptor(loginInterceptor())
                 .addPathPatterns("/**")

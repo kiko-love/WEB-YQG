@@ -1,7 +1,9 @@
 package com.yqg.webyqg;
 
+import com.yqg.mapper.UserMapper;
 import com.yqg.messaging.MessageProducer;
 import com.yqg.service.impl.UserArticleOperationServiceImpl;
+import com.yqg.service.impl.UserServiceImpl;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +13,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 class WebYqgApplicationTests {
 
     @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private UserServiceImpl userService;
+    @Autowired
     private UserArticleOperationServiceImpl userArticleOperationService;
     @Autowired
     MessageProducer messageProducer;
 
     @Test
     public void testSelect() throws TasteException, InterruptedException {
+        System.out.println(userService.getUserList());
         // 生产者发送消息
-        messageProducer.send("hello world");
-        Thread.sleep(1000);
+//        messageProducer.send("hello world");
+//        Thread.sleep(1000);
 
 //        List<Long> list = userArticleOperationService.recommend(10003,10);
 //        String s = userArticleOperationService.genRecArticlesIntegration(list);
