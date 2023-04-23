@@ -4,6 +4,8 @@ import com.yqg.service.impl.ResourceServicesImpl;
 import com.yqg.vo.UploadResource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,5 +27,11 @@ public class ResourceController {
                              HttpServletRequest request,
                              @ModelAttribute UploadResource uploadResource) throws IOException, NoSuchAlgorithmException {
         return resourceServices.uploadFile(file, uploadResource,request);
+    }
+
+    @GetMapping("/download/{userId}/{fileId}")
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String userId,
+                                                            @PathVariable String fileId) throws IOException {
+        return resourceServices.downloadFile(userId,fileId);
     }
 }

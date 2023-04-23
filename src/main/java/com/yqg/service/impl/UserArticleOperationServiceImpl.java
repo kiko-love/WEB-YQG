@@ -3,6 +3,7 @@ package com.yqg.service.impl;
 import com.yqg.R.Result;
 import com.yqg.mapper.UserArticleOperationMapper;
 import com.yqg.service.IUserArticleOperationService;
+import com.yqg.vo.Article;
 import com.yqg.vo.RecommendArticle;
 import com.yqg.vo.UserArticleOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,16 @@ public class UserArticleOperationServiceImpl implements IUserArticleOperationSer
         return userArticleOperationMapper.getAllUserPreference();
     }
 
+    @Override
+    public List<Long> getRandomListIdsByNum(int num) {
+        return userArticleOperationMapper.getRandomListIdsByNum(num);
+    }
+
+    @Override
+    public List<Article> getRandomListByNum(int num) {
+        return userArticleOperationMapper.getRandomListByNum(num);
+    }
+
     /**
      * 数据整合（把获取到的推荐文章ID进行查询再返回JSON数据）
      *
@@ -63,18 +74,22 @@ public class UserArticleOperationServiceImpl implements IUserArticleOperationSer
         List<RecommendArticle> articleList = null;
         if (recommendList.size() == 0) {
             articleList = articleService.getRandomArticle(num);
+        } else if (recommendList.size() < num) {
+            articleList = articleService.getArticles(recommendList);
+            articleList.addAll(articleService.getRandomArticle(num - recommendList.size()));
         } else {
             articleList = articleService.getArticles(recommendList);
-            //随机排列articleList的元素
-            articleList = articleList.stream().sorted((a, b) -> Math.random() > 0.5 ? 1 : -1)
-                    .collect(Collectors.toList());
-            articleList = convertTagsStringToList(articleList);
         }
+        //随机排列articleList的元素
+        articleList = articleList.stream().sorted((a, b) -> Math.random() > 0.5 ? 1 : -1)
+                .collect(Collectors.toList());
+        articleList = convertTagsStringToList(articleList);
         return Result.success(articleList);
     }
 
     /**
      * 转换Tags字符串为数组
+     *
      * @param articleList
      * @return
      */

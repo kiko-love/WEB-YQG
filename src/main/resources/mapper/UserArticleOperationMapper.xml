@@ -19,4 +19,18 @@
         GROUP BY user_id, article_id
     </select>
 
+    <select id="getRandomListIdsByNum" resultType="java.lang.Long">
+        SELECT article_id
+        FROM article
+        ORDER BY RAND()
+            LIMIT #{num};
+    </select>
+
+    <select id="getRandomListByNum" resultType="com.yqg.vo.Article">
+        SELECT *
+        FROM article
+        ORDER BY RAND()
+            LIMIT #{num};
+    </select>
+
 </mapper>

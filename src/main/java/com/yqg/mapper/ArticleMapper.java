@@ -49,4 +49,12 @@ public interface ArticleMapper {
      * @return
      */
     int updateAudit(String articleId, Integer audit);
+
+
+    /**
+     * 获取最新num条文章记录
+     * @param num
+     * @return
+     */
+    List<RecommendArticle> getLastArticles(int num);
 }

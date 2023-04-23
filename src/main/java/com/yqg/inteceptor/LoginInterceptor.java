@@ -1,5 +1,9 @@
 package com.yqg.inteceptor;
 
+import com.alibaba.fastjson.JSONObject;
+import com.yqg.R.NomalEnum;
+import com.yqg.R.Result;
+import com.yqg.R.ResultEnum;
 import com.yqg.utils.RedisUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -57,8 +61,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 //        }
 //
 //        // 解析 Token
-//        Object o =  redisUtils.get(NomalEnum.LOGIN_TOKEN_PREFIX + userId);
-//        if (o == null) {
+//        String o =  (String)redisUtils.get(NomalEnum.LOGIN_TOKEN_PREFIX + userId);
+//        if (!o.equals(token)) {
 //            Result<Object> r = new Result<>();
 //            r.setCode(ResultEnum.AUTHOR_FAILED.getCode());
 //            r.setMsg(ResultEnum.AUTHOR_FAILED.getMsg());

@@ -1,19 +1,17 @@
-package com.yqg.mapper;
+package com.yqg.service;
 
 import com.yqg.vo.UploadResource;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-@Mapper
-public interface ResourceMapper {
+public interface IResourceService {
+
     /**
      * 获取指定id的资源（批量）
      * @param resourceIds
      * @return
      */
     List<UploadResource> getUploadResource(List<Long> resourceIds);
-
 
     /**
      * 批量写入资源记录

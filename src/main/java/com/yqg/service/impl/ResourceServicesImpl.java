@@ -1,13 +1,21 @@
 package com.yqg.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.yqg.R.Result;
+import com.yqg.mapper.ResourceMapper;
+import com.yqg.service.IResourceService;
 import com.yqg.utils.FileTypeUtils;
 import com.yqg.vo.UploadResource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +29,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -30,21 +40,25 @@ import java.util.zip.Checksum;
  * @author KIKO
  */
 @Service
-public class ResourceServicesImpl {
+public class ResourceServicesImpl implements IResourceService {
     @Autowired
     private ResourceLoader resourceLoader;
+    @Autowired
+    private ResourceMapper resourceMapper;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
+
     public String uploadFile(MultipartFile file, UploadResource uploadResource, HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
         // 获取文件类型和用户ID
         String fileType = getFileType(file.getOriginalFilename());
-        String userName = uploadResource.getUserId();
+        String userId = uploadResource.getUserId();
         // 构建保存路径和文件名
-        String basePath = uploadDir+ File.separator  + fileType + File.separator + userName;
-        String fileName = IdUtil.simpleUUID() + getFileSuffix(Objects.requireNonNull(file.getOriginalFilename()));
+        String basePath = uploadDir + File.separator + fileType + File.separator + userId;
+        String fileId = IdUtil.simpleUUID();
+        String fileName = fileId + getFileSuffix(Objects.requireNonNull(file.getOriginalFilename()));
         String savePath = basePath + File.separator + fileName;
-        String relativePath = fileType + File.separator + userName + File.separator + fileName;
+        String relativePath = fileType + File.separator + userId + File.separator + fileName;
         basePath = basePath.replace("/", File.separator);
         basePath = URLDecoder.decode(basePath, StandardCharsets.UTF_8);
         savePath = savePath.replace("/", File.separator);
@@ -60,23 +74,64 @@ public class ResourceServicesImpl {
         // 保存文件到本地磁盘或者云存储
         File saveFile = new File(savePath);
         file.transferTo(saveFile);
+        List<UploadResource> list = new ArrayList<>();
+        uploadResource.setId(fileId);
+        uploadResource.setFee(0);
+        uploadResource.setFileType(fileType);
+        uploadResource.setRealName(file.getOriginalFilename());
+        uploadResource.setStatus(0);
+        uploadResource.setCreateTime(String.valueOf(DateUtil.current()));
+        uploadResource.setDownloadCount(0);
+        uploadResource.setUpdateTime(uploadResource.getCreateTime());
+        uploadResource.setLikeCount(0);
+        uploadResource.setFeeCost(0);
+        uploadResource.setViewCount(0);
+        list.add(uploadResource);
+        int i = insertBatchResources(list);
+        if (i == 0) {
+            return Result.error("上传失败");
+        }
         // 返回外部映射链接
-        String url = getResourceUrl(relativePath,request);
+        String url = getResourceUrl(relativePath, request);
         HashMap<Object, Object> hashMap = new HashMap<>(16);
         hashMap.put("url", url);
         return Result.success(hashMap);
     }
 
+    public ResponseEntity<InputStreamResource> downloadFile(String userId, String fileId) throws IOException {
+        UploadResource uploadResource = resourceMapper.getResourcesById(fileId);
+        if (uploadResource == null) {
+            return ResponseEntity.notFound().build();
+        }
+        String fileType = uploadResource.getFileType();
+        String basePath = uploadDir + File.separator + fileType + File.separator + userId;
+        String fileName = fileId + getFileSuffix(Objects.requireNonNull(uploadResource.getRealName()));
+        String savePath = basePath + File.separator + fileName;
+        FileSystemResource file = new FileSystemResource(savePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getFilename()));
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentLength(file.contentLength())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(file.getInputStream()));
+    }
+
     /**
      * 根据文件路径获取外部映射链接
+     *
      * @param filePath
      * @return
      * @throws IOException
      */
-    private String getResourceUrl(String filePath,HttpServletRequest request) throws IOException {
+    private String getResourceUrl(String filePath, HttpServletRequest request) throws IOException {
         //协议 :// ip地址 ：端口号 / 文件目录(/images/2020/03/15/xxx.jpg)
         String fileUrl = request.getScheme() + "://" + request.getServerName()
-                + ":" + request.getServerPort()+ "/"
+                + ":" + request.getServerPort() + "/"
                 + filePath;
         fileUrl = fileUrl.replaceAll("\\\\", "/");
         return fileUrl;
@@ -84,6 +139,7 @@ public class ResourceServicesImpl {
 
     /**
      * 根据文件名获取文件后缀
+     *
      * @param filename
      * @return
      */
@@ -97,6 +153,7 @@ public class ResourceServicesImpl {
 
     /**
      * 根据文件名获取文件类型
+     *
      * @param filename
      * @return
      */
@@ -150,5 +207,20 @@ public class ResourceServicesImpl {
             checksum.update(buffer, 0, bytesRead);
         }
         return checksum.getValue();
+    }
+
+    @Override
+    public List<UploadResource> getUploadResource(List<Long> resourceIds) {
+        return resourceMapper.getUploadResource(resourceIds);
+    }
+
+    @Override
+    public int insertBatchResources(List<UploadResource> list) {
+        return resourceMapper.insertBatchResources(list);
+    }
+
+    @Override
+    public UploadResource getResourcesById(String fileId) {
+        return resourceMapper.getResourcesById(fileId);
     }
 }

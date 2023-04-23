@@ -3,7 +3,10 @@ package com.yqg.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.jwt.JWTUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yqg.R.NomalEnum;
 import com.yqg.R.Result;
 import com.yqg.R.ResultEnum;
@@ -19,6 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serial;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,7 +160,7 @@ public class UserServiceImpl implements IUserService {
      *
      * @param token
      */
-    public String validateToken(String token, String userId) {
+    public String validateToken(String token, String userId) throws NoSuchFieldException, IllegalAccessException, JsonProcessingException, InvocationTargetException {
         HashMap<String, Object> map = new HashMap<>(16);
         if (token == null || token.isEmpty()) {
             Result<Object> r = new Result<>();
@@ -165,9 +171,11 @@ public class UserServiceImpl implements IUserService {
         }
         Result<Object> r = new Result<>();
         boolean expire = redisUtils.isExpire(NomalEnum.LOGIN_TOKEN_PREFIX + userId);
+        String obj = (String) redisUtils.get(NomalEnum.LOGIN_TOKEN_PREFIX + userId);
+        boolean isExpire = token.equals(obj) && expire;
         r.setCode(ResultEnum.SUCCESS.getCode());
         r.setMsg(ResultEnum.SUCCESS.getMsg());
-        map.put("isExpire", expire);
+        map.put("isExpire", isExpire);
         r.setData(map);
         return JSONObject.toJSONString(r);
     }
@@ -180,10 +188,7 @@ public class UserServiceImpl implements IUserService {
      */
     public String setLoginToken(User user) {
         String loginToken = IdUtil.simpleUUID();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("token", loginToken);
-        map.put("user", user);
-        redisUtils.set(NomalEnum.LOGIN_TOKEN_PREFIX + user.getUserId(), map, LOGIN_EXPIRE);
+        redisUtils.set(NomalEnum.LOGIN_TOKEN_PREFIX + user.getUserId(), loginToken, LOGIN_EXPIRE);
         return loginToken;
     }
 

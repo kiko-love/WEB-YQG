@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.yqg.R.NomalEnum;
 import com.yqg.R.Result;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -45,7 +47,7 @@ public class LoginController {
 
     @ResponseBody
     @PostMapping("/validateToken")
-    public String validateToken(@Param("token")String token,@Param("userId")String userId) {
+    public String validateToken(@Param("token")String token,@Param("userId")String userId) throws NoSuchFieldException, IllegalAccessException, JsonProcessingException, InvocationTargetException {
         return userService.validateToken(token,userId);
     }
 

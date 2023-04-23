@@ -1,5 +1,6 @@
 package com.yqg.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.yqg.R.Result;
 import com.yqg.mapper.ArticleMapper;
@@ -40,6 +41,11 @@ public class ArticleServiceImpl implements IArticleService {
         return articleMapper.updateAudit(articleId, audit);
     }
 
+    @Override
+    public List<RecommendArticle> getLastArticles(int num) {
+        return articleMapper.getLastArticles(num);
+    }
+
 
     /**
      * 文章上传
@@ -52,12 +58,13 @@ public class ArticleServiceImpl implements IArticleService {
             article.setArticleId(String.valueOf(IdUtil
                     .getSnowflake(1, 1).nextId()));
             article.setCoverImage("https://vitejs.dev/logo-with-shadow.png");
-            String summary = article.getContent().substring(0, 100);
             article.setUpdateTime(article.getCreateTime());
             article.setAudit(0);
             article.setLikeCount(0);
             article.setReadCount(0);
             article.setCommentCount(0);
+            article.setCreateTime(String.valueOf(DateUtil.current()));
+            article.setUpdateTime(article.getCreateTime());
         } else {
             return Result.error("文章参数为空");
         }

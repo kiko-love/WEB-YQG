@@ -24,6 +24,11 @@ public class ArticleController {
         return userArticleOperationService.genRecArticlesIntegration(userId, 10);
     }
 
+    @RequestMapping("/list/more")
+    public String getMoreArticles() throws TasteException {
+        return userArticleOperationService.genRecArticlesIntegration(null,10);
+    }
+
     @RequestMapping("/content/{articleId}")
     public String getArticleContent(@PathVariable("articleId") String articleId) {
         return articleService.getArticleContent(articleId);

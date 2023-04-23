@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class WebYqgApplicationTests {
 
@@ -28,10 +30,11 @@ class WebYqgApplicationTests {
 //        messageProducer.send("hello world");
 //        Thread.sleep(1000);
 
-//        List<Long> list = userArticleOperationService.recommend(10003,10);
-//        String s = userArticleOperationService.genRecArticlesIntegration(list);
-//        System.out.println("----- selectAll method test ------");
-//        System.out.println(s);
+        List<Long> list = userArticleOperationService.recommend(10001,10);
+        String s = userArticleOperationService.genRecArticlesIntegration("10001",10);
+        System.out.println("----- selectAll method test ------");
+        System.out.println(list);
+        System.out.println(s);
 
 
 //        System.out.println(("----- selectAll method test ------"));

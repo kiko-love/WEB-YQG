@@ -10,21 +10,34 @@
         </foreach>
     </select>
 
-    <insert id="insertBatch" parameterType="java.util.List">
-        insert into resources (id, user_id,title,description,
-                               tags,fee,fee_count,status,view_count
-        ,comment_count,like_count, create_time, update_time)
+    <insert id="insertBatchResources" parameterType="java.util.List">
+        insert into resources (id, user_id,title,description,realName,fileType,
+        tags,fee,fee_cost,status,view_count
+        ,download_count,like_count, create_time, update_time)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.id},#{item.userId},#{item.title},#{item.description},
-            #{item.tags},#{item.fee},#{item.feeCount},#{item.status},#{item.viewCount},
-            #{item.commentCount},#{item.likeCount},#{item.createTime},#{item.updateTime})
+            (#{item.id},#{item.userId},#{item.title},#{item.description},#{item.realName},#{item.fileType},
+            #{item.tags},#{item.fee},#{item.feeCost},#{item.status},#{item.viewCount},#{item.downloadCount},
+            #{item.likeCount},#{item.createTime},#{item.updateTime})
         </foreach>
+    </insert>
+
+    <insert id="insertResource" parameterType="com.yqg.vo.UploadResource">
+        insert into resources (id, user_id, title, description, realName, fileType,
+                               tags, fee, fee_cost, status, view_count
+            , download_count, like_count, create_time, update_time)
+        values (#{id}, #{userId}, #{title}, #{description}, #{realName}, #{fileType}
+        #{tags}, #{fee}, #{feeCost}, #{status}, #{viewCount}, #{downloadCount}
+        #{likeCount}, #{createTime}, #{updateTime})
     </insert>
 
     <update id="updateStatusById" >
         update resources set status = #{status} where id = #{id}
     </update>
+
+    <select id="getResourcesById" resultType="com.yqg.vo.UploadResource">
+        select * from resources where id = #{fileId}
+    </select>
 
 
 </mapper>

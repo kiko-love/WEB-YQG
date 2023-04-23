@@ -129,5 +129,13 @@
         WHERE article_id = #{articleId}
     </update>
 
+    <select id="getLastArticles" resultType="com.yqg.vo.RecommendArticle">
+        SELECT ra.*, u.user_id, u.user_name, u.email, u.user_avatar_url, u.user_des,
+               u.user_exp, u.user_tags, u.status, u.login_times, u.integral
+        FROM article ra
+                 JOIN user u ON ra.user_id = u.user_id
+        ORDER BY create_time DESC
+            LIMIT #{num}
+    </select>
 
 </mapper>
