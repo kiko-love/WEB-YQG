@@ -2,7 +2,9 @@ package com.yqg.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.yqg.R.Result;
+import com.yqg.R.ResultEnum;
 import com.yqg.mapper.ArticleMapper;
 import com.yqg.service.IArticleService;
 import com.yqg.vo.Article;
@@ -96,8 +98,14 @@ public class ArticleServiceImpl implements IArticleService {
      */
     public String getArticleContent(String articleId) {
         DetailArticle article = articleMapper.getArticleContent(articleId);
-        if (article == null) {
+        if (article == null || article.getAudit() == 110 || article.getAudit() == -1) {
             return Result.error("未找到该文章");
+        }
+        if (article.getAudit() == 0) {
+            Result<Object> result = new Result<>();
+            result.setCode(ResultEnum.ARTICLE_IS_AUDITING.getCode());
+            result.setMsg(ResultEnum.ARTICLE_IS_AUDITING.getMsg());
+            return JSONObject.toJSONString(result);
         }
         article.setDetailContent(article.getContent());
         return Result.success(convertTagsStringToList(article));

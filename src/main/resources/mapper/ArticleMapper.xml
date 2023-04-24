@@ -103,7 +103,6 @@
         <association property="user" javaType="com.yqg.vo.User">
             <id property="userId" column="user_id"/>
             <result property="userName" column="user_name"/>
-            <result property="email" column="email"/>
             <result property="userAvatarUrl" column="user_avatar_url"/>
             <result property="userDes" column="user_des"/>
             <result property="userExp" column="user_exp"/>

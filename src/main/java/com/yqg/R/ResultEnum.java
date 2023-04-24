@@ -34,6 +34,8 @@ public enum ResultEnum {
     AUTHOR_EXPIRE_LACK(403, "授权信息缺失"),
     AUTHOR_PARAMS_ERROR(40000, "授权信息错误"),
     AUTHOR_PARAMS_LACK(40001, "授权信息缺失"),
+    ARTICLE_IS_AUDITING(50001, "文章审核中"),
+    ARTICLE_AUDITING_FAILED(50002, "文章审核不通过"),
     ;
     private final Integer code;
     private final String msg;
