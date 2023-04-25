@@ -31,13 +31,98 @@
         #{likeCount}, #{createTime}, #{updateTime})
     </insert>
 
-    <update id="updateStatusById" >
-        update resources set status = #{status} where id = #{id}
+    <update id="updateStatusById">
+        update resources
+        set status = #{status}
+        where id = #{id}
     </update>
 
     <select id="getResourcesById" resultType="com.yqg.vo.UploadResource">
-        select * from resources where id = #{fileId}
+        select *
+        from resources
+        where id = #{fileId}
     </select>
 
+    <select id="getResourcesList" resultMap="actionResourceMap">
+        select r.*,
+               u.user_id,
+               u.user_name,
+               u.email,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.status,
+               u.login_times,
+               u.integral
+        from resources r
+                 JOIN user u ON r.user_id = u.user_id
+    </select>
+
+    <resultMap id="actionResourceMap" type="com.yqg.vo.ActionResource">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="realName" property="realName"/>
+        <result column="fileType" property="fileType"/>
+        <result column="tags" property="tags"/>
+        <result column="fee" property="fee"/>
+        <result column="fee_cost" property="feeCost"/>
+        <result column="status" property="status"/>
+        <result column="view_count" property="viewCount"/>
+        <result column="download_count" property="downloadCount"/>
+        <result column="like_count" property="likeCount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <association property="user" javaType="com.yqg.vo.User">
+            <id property="userId" column="user_id"/>
+            <result property="userName" column="user_name"/>
+            <result property="userAvatarUrl" column="user_avatar_url"/>
+            <result property="userDes" column="user_des"/>
+            <result property="userExp" column="user_exp"/>
+            <result property="userTags" column="user_tags"/>
+            <result property="status" column="status"/>
+            <result property="loginTimes" column="login_times"/>
+            <result property="integral" column="integral"/>
+        </association>
+    </resultMap>
+
+
+    <select id="getResourceByTag" resultMap="actionResourceMap">
+        select r.*,
+               u.user_id,
+               u.user_name,
+               u.email,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.status,
+               u.login_times,
+               u.integral
+        from resources r
+                 JOIN user u ON r.user_id = u.user_id
+        where r.tags like concat('%', #{tag}, '%')
+    </select>
+
+    <select id="getHotResource" resultMap="hotResourceMap">
+        SELECT * FROM resources
+        ORDER BY LOG10(view_count) * 0.3 + LOG10(like_count + 1) * 0.4 + LOG10(download_count + 1) * 0.3 DESC
+    </select>
+    <resultMap id="hotResourceMap" type="com.yqg.vo.UploadResource">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="fileType" property="fileType"/>
+        <result column="tags" property="tags"/>
+        <result column="fee" property="fee"/>
+        <result column="fee_cost" property="feeCost"/>
+        <result column="status" property="status"/>
+        <result column="view_count" property="viewCount"/>
+        <result column="download_count" property="downloadCount"/>
+        <result column="like_count" property="likeCount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
 
 </mapper>

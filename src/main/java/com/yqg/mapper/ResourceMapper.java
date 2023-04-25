@@ -1,5 +1,6 @@
 package com.yqg.mapper;
 
+import com.yqg.vo.ActionResource;
 import com.yqg.vo.UploadResource;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -28,4 +29,24 @@ public interface ResourceMapper {
      * @return
      */
     UploadResource getResourcesById(String fileId);
+
+
+    /**
+     * 获取所有资源
+     * @return
+     */
+    List<ActionResource> getResourcesList();
+
+    /**
+     * 根据标签获取资源
+     * @param tag
+     * @return
+     */
+    List<ActionResource> getResourceByTag(String tag);
+
+    /**
+     * 获取热门资源
+     * @return
+     */
+    List<UploadResource> getHotResource();
 }

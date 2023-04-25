@@ -6,6 +6,8 @@ import com.yqg.R.Result;
 import com.yqg.mapper.ResourceMapper;
 import com.yqg.service.IResourceService;
 import com.yqg.utils.FileTypeUtils;
+import com.yqg.vo.ActionResource;
+import com.yqg.vo.DetailArticle;
 import com.yqg.vo.UploadResource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
@@ -48,6 +51,68 @@ public class ResourceServicesImpl implements IResourceService {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
+
+
+    public String getAllResources() {
+        List<ActionResource> list = getResourcesList();
+        if (list == null || list.size() == 0) {
+            return Result.success("no resource");
+        } else {
+            list = convertTagsStringToList(list);
+        }
+        //随机排列list元素
+        list = list.stream().sorted((a, b) -> Math.random() > 0.5 ? 1 : -1)
+                .collect(Collectors.toList());
+        return Result.success(list);
+    }
+
+    public String getHot() {
+        List<UploadResource> list = getHotResource();
+        if (list == null || list.size() == 0) {
+            return Result.success(null);
+        } else {
+            return Result.success(list);
+        }
+
+    }
+
+    /**
+     * 根据标签获取资源列表
+     *
+     * @param tag
+     * @return
+     */
+    public String getResourcesByTags(String tag) {
+        List<ActionResource> list = null;
+        if ("all".equals(tag)) {
+            list = getResourcesList();
+        } else {
+            list = getResourceByTag(tag);
+        }
+        if (list == null || list.size() == 0) {
+            return Result.success(null);
+        } else {
+            list = convertTagsStringToList(list);
+        }
+        return Result.success(list);
+    }
+
+    /**
+     * 转换Tags字符串为数组
+     *
+     * @param resource
+     * @return
+     */
+    public static List<ActionResource> convertTagsStringToList(List<ActionResource> resource) {
+        for (ActionResource actionResource : resource) {
+            String tags = actionResource.getTags();
+            if (tags != null && !tags.isEmpty()) {
+                String[] tagsArray = tags.split(",");
+                actionResource.setTagsArray(tagsArray);
+            }
+        }
+        return resource;
+    }
 
     public String uploadFile(MultipartFile file, UploadResource uploadResource, HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
         // 获取文件类型和用户ID
@@ -137,6 +202,7 @@ public class ResourceServicesImpl implements IResourceService {
         return fileUrl;
     }
 
+
     /**
      * 根据文件名获取文件后缀
      *
@@ -222,5 +288,21 @@ public class ResourceServicesImpl implements IResourceService {
     @Override
     public UploadResource getResourcesById(String fileId) {
         return resourceMapper.getResourcesById(fileId);
+    }
+
+    @Override
+    public List<ActionResource> getResourcesList() {
+        return resourceMapper.getResourcesList();
+    }
+
+    @Override
+    public List<ActionResource> getResourceByTag(String tag) {
+        return resourceMapper.getResourceByTag(tag);
+    }
+
+
+    @Override
+    public List<UploadResource> getHotResource() {
+        return resourceMapper.getHotResource();
     }
 }
