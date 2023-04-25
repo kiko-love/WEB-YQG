@@ -8,8 +8,8 @@
     </select>
 
     <insert id="addComment" parameterType="com.yqg.vo.Comment">
-        INSERT INTO comment (comment_id, article_id, user_id, content, parent_id, create_time, is_deleted)
-        VALUES (#{commentId}, #{articleId}, #{userId}, #{content}, #{parentId}, #{createTime}, #{isDeleted})
+        INSERT INTO comment (comment_id, article_id, topic, user_id, content, parent_id, create_time, is_deleted)
+        VALUES (#{commentId}, #{articleId}, #{topic}, #{userId}, #{content}, #{parentId}, #{createTime}, #{isDeleted})
     </insert>
 
     <select id="getCommentList" resultMap="actionCommentMap">
@@ -25,13 +25,17 @@
                u.integral
         FROM comment c
                  JOIN user u ON c.user_id = u.user_id
-        WHERE c.is_deleted = 0
+        WHERE c.is_deleted = 0 AND parent_id = 0
         ORDER BY c.create_time DESC
     </select>
 
     <resultMap id="actionCommentMap" type="com.yqg.vo.ActionComment">
         <id property="commentId" column="comment_id"/>
         <result property="articleId" column="article_id"/>
+        <result property="link" column="link"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="topic" column="topic"/>
         <result property="content" column="content"/>
         <result property="parentId" column="parent_id"/>
         <result property="createTime" column="create_time"/>

@@ -28,6 +28,8 @@ public class CommentServiceImpl implements ICommentService {
                 .getSnowflake(1, 1).nextId()));
         comment.setCreateTime(String.valueOf(DateUtil.current()));
         comment.setIsDeleted(0);
+        comment.setCommentCount(0);
+        comment.setLikeCount(0);
         int i = commentMapper.addComment(comment);
         if (i > 0) {
             return Result.success(null);

@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 public class Comment {
     private String commentId;
     private String articleId;
+    private String link;
+    private Integer commentCount;
+    private Integer likeCount;
+    private String topic;
     private String userId;
     private String content;
     private String parentId;
