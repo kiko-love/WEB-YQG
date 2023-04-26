@@ -57,4 +57,19 @@ public interface ArticleMapper {
      * @return
      */
     List<RecommendArticle> getLastArticles(int num);
+
+    /**
+     * 文章阅读量+1
+     * @param articleId
+     * @return
+     */
+    int incrementReadCount(String articleId);
+
+    /**
+     * 更新文章
+     *
+     * @param article
+     * @return
+     */
+    int updateArticle(Article article);
 }

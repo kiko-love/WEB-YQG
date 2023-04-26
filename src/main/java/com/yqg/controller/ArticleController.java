@@ -45,4 +45,9 @@ public class ArticleController {
         return articleService.updateArticleAudit(articleId, audit);
     }
 
+    @PostMapping("/update")
+    public String updateArticle(@RequestBody Article article) {
+        return articleService.updateOldArticle(article);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.yqg.mapper;
 
 import com.yqg.vo.Tags;
+import com.yqg.vo.Topic;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,4 +17,11 @@ public interface TagsMapper {
      * @return
      */
     List<Tags> getTags();
+
+    /**
+     * 获取话题列表
+     * @return
+     */
+
+    List<Topic> getTopic();
 }

@@ -3,8 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yqg.mapper.TagsMapper">
-    <select id="getTags"  resultType="com.yqg.vo.Tags">
-    SELECT * FROM tags
+    <select id="getTags" resultType="com.yqg.vo.Tags">
+        SELECT *
+        FROM tags
+    </select>
+
+    <select id="getTopic" resultType="com.yqg.vo.Topic">
+        SELECT *
+        FROM topic
     </select>
 
 </mapper>

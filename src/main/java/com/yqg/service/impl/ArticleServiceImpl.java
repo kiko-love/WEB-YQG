@@ -13,7 +13,9 @@ import com.yqg.vo.RecommendArticle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author KIKO
@@ -48,6 +50,32 @@ public class ArticleServiceImpl implements IArticleService {
         return articleMapper.getLastArticles(num);
     }
 
+    @Override
+    public int incrementReadCount(String articleId) {
+        return articleMapper.incrementReadCount(articleId);
+    }
+
+    @Override
+    public int updateArticle(Article article) {
+        return articleMapper.updateArticle(article);
+    }
+
+
+    public String updateOldArticle(Article article) {
+        if (article != null) {
+            if (article.getArticleId() == null || "".equals(article.getArticleId())) {
+                return Result.error("文章id为空");
+            }
+            article.setUpdateTime(String.valueOf(DateUtil.current()));
+            article.setAudit(0);
+        } else {
+            return Result.error("文章参数为空");
+        }
+        if (articleMapper.updateArticle(article) > 0) {
+            return Result.success("文章更新成功");
+        }
+        return Result.error("文章更新失败");
+    }
 
     /**
      * 文章上传
@@ -71,7 +99,9 @@ public class ArticleServiceImpl implements IArticleService {
             return Result.error("文章参数为空");
         }
         if (articleMapper.addArticle(article) > 0) {
-            return Result.success("文章上传成功");
+            Map<String, Object> map = new HashMap<>(16);
+            map.put("articleId", article.getArticleId());
+            return Result.success(map);
         }
         return Result.error("文章上传失败");
     }
@@ -107,6 +137,7 @@ public class ArticleServiceImpl implements IArticleService {
             result.setMsg(ResultEnum.ARTICLE_IS_AUDITING.getMsg());
             return JSONObject.toJSONString(result);
         }
+        incrementReadCount(articleId);
         article.setDetailContent(article.getContent());
         return Result.success(convertTagsStringToList(article));
     }

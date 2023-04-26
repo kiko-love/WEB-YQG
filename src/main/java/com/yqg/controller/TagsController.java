@@ -20,4 +20,9 @@ public class TagsController {
     public String getTagsList() {
         return tagsService.getTagsList();
     }
+
+    @RequestMapping("/topicList")
+    public String getAllTopic(){
+        return tagsService.getAllTopic();
+    }
 }

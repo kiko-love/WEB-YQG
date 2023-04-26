@@ -68,6 +68,10 @@
         </association>
     </resultMap>
 
+    <update id="incrementReadCount">
+        UPDATE article SET read_count = read_count + 1 WHERE article_id = #{articleId}
+    </update>
+
     <select id="getArticleContent" resultMap="articleWithUserResultMap">
         SELECT a.*,
                u.user_id,
@@ -84,6 +88,7 @@
                  JOIN user u ON a.user_id = u.user_id
         WHERE a.article_id = #{articleId}
     </select>
+
 
     <resultMap id="articleWithUserResultMap" type="com.yqg.vo.DetailArticle">
         <id property="articleId" column="article_id"/>
@@ -121,6 +126,17 @@
         VALUES (#{articleId},#{title}, #{summary}, #{content}, #{coverImage}, #{likeCount}, #{readCount}, #{commentCount}, #{tags},
                 #{userId}, #{createTime}, #{updateTime}, #{audit})
     </insert>
+
+    <update id="updateArticle" parameterType="com.yqg.vo.Article">
+        UPDATE article
+        SET title = #{title},
+            summary = #{summary},
+            content = #{content},
+            tags = #{tags},
+            update_time = #{updateTime},
+            audit = #{audit}
+        WHERE article_id = #{articleId}
+    </update>
 
     <update id="updateAudit" parameterType="string">
         UPDATE article

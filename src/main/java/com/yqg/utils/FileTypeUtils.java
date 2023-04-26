@@ -42,7 +42,7 @@ public class FileTypeUtils {
         FILE_TYPE_MAP.put("flac", "audio");
 
         // 压缩文件
-        FILE_TYPE_MAP.put("zip", "compressed");
+        FILE_TYPE_MAP.put("zip", "x`");
         FILE_TYPE_MAP.put("rar", "compressed");
         FILE_TYPE_MAP.put("7z", "compressed");
         FILE_TYPE_MAP.put("tar.gz", "compressed");

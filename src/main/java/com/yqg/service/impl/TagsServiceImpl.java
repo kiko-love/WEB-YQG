@@ -4,6 +4,7 @@ import com.yqg.R.Result;
 import com.yqg.mapper.TagsMapper;
 import com.yqg.service.ITagsService;
 import com.yqg.vo.Tags;
+import com.yqg.vo.Topic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,18 @@ public class TagsServiceImpl implements ITagsService {
     @Override
     public List<Tags> getTags() {
         return tagsMapper.getTags();
+    }
+
+    @Override
+    public List<Topic> getTopic() {
+        return tagsMapper.getTopic();
+    }
+
+    public String getAllTopic(){
+        if (tagsMapper.getTopic().size() > 0) {
+            return Result.success(tagsMapper.getTopic());
+        }
+        return Result.error("获取话题列表失败");
     }
 
     public String getTagsList() {

@@ -52,6 +52,8 @@ public class ResourceServicesImpl implements IResourceService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    private static String ALL_FILES = "all";
+
 
     public String getAllResources() {
         List<ActionResource> list = getResourcesList();
@@ -84,7 +86,7 @@ public class ResourceServicesImpl implements IResourceService {
      */
     public String getResourcesByTags(String tag) {
         List<ActionResource> list = null;
-        if ("all".equals(tag)) {
+        if (ALL_FILES.equals(tag)) {
             list = getResourcesList();
         } else {
             list = getResourceByTag(tag);
