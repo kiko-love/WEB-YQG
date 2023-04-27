@@ -3,6 +3,9 @@ package com.yqg.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yqg.R.Result;
 import com.yqg.R.ResultEnum;
 import com.yqg.mapper.ArticleMapper;
@@ -13,6 +16,7 @@ import com.yqg.vo.RecommendArticle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +64,33 @@ public class ArticleServiceImpl implements IArticleService {
         return articleMapper.updateArticle(article);
     }
 
+    @Override
+    public List<RecommendArticle> getArticleList(Integer pageNum, Integer pageSize) {
+        return articleMapper.getArticleList(pageNum, pageSize);
+    }
+
+
+    public String getPageArticleList(Integer pageNum, Integer pageSize,String orderBy,String orderType) {
+        //只允许指定的字段排序，防止sql注入
+        String[] orderByArr = {"create_time", "update_time","audit","read_count","like_count","comment_count","audit"};
+        String orderByStr = "";
+        if (StringUtils.isNotEmpty(orderBy) && Arrays.asList(orderByArr).contains(orderBy.toLowerCase())) {
+            orderByStr = String.format("%s %s", orderBy.toLowerCase(), "asc".equalsIgnoreCase(orderType) ? "asc" : "desc");
+        } else {
+            // 默认排序
+            orderByStr = "";
+        }
+        PageHelper.startPage(pageNum, pageSize,orderByStr);
+        List<RecommendArticle> articleList = articleMapper.getArticleList(pageNum, pageSize);
+        PageInfo<RecommendArticle> pageInfo = new PageInfo<>(articleList);
+        if (articleList.size() > 0) {
+            Map<String, Object> map = new HashMap<>(16);
+            map.put("total", pageInfo.getTotal());
+            map.put("list", articleList);
+            return Result.success(map);
+        }
+        return Result.error("文章列表为空");
+    }
 
     public String updateOldArticle(Article article) {
         if (article != null) {
@@ -154,7 +185,7 @@ public class ArticleServiceImpl implements IArticleService {
             article.setTagsArray(article.getTags().split(","));
         } else {
             // 如果 tags 字段为空，则将 tags 属性设置为一个空数组
-            article.setTagsArray(new String[0]);
+            article.setTagsArray(null);
         }
         return article;
     }

@@ -153,4 +153,39 @@
             LIMIT #{num}
     </select>
 
+    <select id="getArticleList" resultMap="articleWithUserResultMap">
+        SELECT a.*,
+               u.user_id,
+               u.user_name,
+               u.email,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.status,
+               u.login_times,
+               u.integral
+        FROM article a
+                 JOIN user u ON a.user_id = u.user_id
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getArticleListByAudit" resultMap="articleWithUserResultMap">
+        SELECT a.*,
+               u.user_id,
+               u.user_name,
+               u.email,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.status,
+               u.login_times,
+               u.integral
+        FROM article a
+                 JOIN user u ON a.user_id = u.user_id
+        WHERE a.audit = #{audit}
+        ORDER BY create_time DESC
+    </select>
+
 </mapper>

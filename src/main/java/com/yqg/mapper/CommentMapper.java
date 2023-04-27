@@ -30,4 +30,11 @@ public interface CommentMapper {
      * @return
      */
     List<ActionComment> getCommentList();
+
+    /**
+     * 删除评论
+     * @param commentId
+     * @return
+     */
+    int deleteComment(String commentId);
 }

@@ -61,4 +61,12 @@ public interface IArticleService {
      */
     int updateArticle(Article article);
 
+    /**
+     * 分页查询文章列表
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<RecommendArticle> getArticleList(Integer pageNum, Integer pageSize);
+
 }

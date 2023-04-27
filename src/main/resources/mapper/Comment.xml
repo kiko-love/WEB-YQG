@@ -3,13 +3,15 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yqg.mapper.CommentMapper">
-    <select id="getTopicList"  resultType="com.yqg.vo.Topic">
-    SELECT * FROM topic
+    <select id="getTopicList" resultType="com.yqg.vo.Topic">
+        SELECT *
+        FROM topic
     </select>
 
     <insert id="addComment" parameterType="com.yqg.vo.Comment">
-        INSERT INTO comment (comment_id, article_id, topic, user_id, content, parent_id, create_time, is_deleted)
-        VALUES (#{commentId}, #{articleId}, #{topic}, #{userId}, #{content}, #{parentId}, #{createTime}, #{isDeleted})
+        INSERT INTO comment (comment_id, article_id, link, topic, user_id, content, parent_id, create_time, is_deleted)
+        VALUES (#{commentId}, #{articleId}, #{link}, #{topic}, #{userId}, #{content}, #{parentId}, #{createTime},
+                #{isDeleted})
     </insert>
 
     <select id="getCommentList" resultMap="actionCommentMap">
@@ -25,7 +27,8 @@
                u.integral
         FROM comment c
                  JOIN user u ON c.user_id = u.user_id
-        WHERE c.is_deleted = 0 AND parent_id = 0
+        WHERE c.is_deleted = 0
+          AND parent_id = 0
         ORDER BY c.create_time DESC
     </select>
 
@@ -52,6 +55,13 @@
             <result property="integral" column="integral"/>
         </association>
     </resultMap>
+
+
+    <delete id="deleteComment" parameterType="string">
+        delete
+        from comment
+        where comment_id = #{commentId}
+    </delete>
 
 
 </mapper>

@@ -47,6 +47,15 @@ public class CommentServiceImpl implements ICommentService {
         return Result.success(commentList);
     }
 
+    public String deleteMyComment(String commentId) {
+        int i = commentMapper.deleteComment(commentId);
+        if (i > 0) {
+            return Result.success(null);
+        } else {
+            return Result.error("删除失败");
+        }
+    }
+
     @Override
     public int addComment(Comment comment) {
         return commentMapper.addComment(comment);
@@ -60,5 +69,10 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public List<ActionComment> getCommentList() {
         return commentMapper.getCommentList();
+    }
+
+    @Override
+    public int deleteComment(String commentId) {
+        return commentMapper.deleteComment(commentId);
     }
 }

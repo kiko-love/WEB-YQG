@@ -1,8 +1,10 @@
 package com.yqg.controller;
 
+import com.yqg.service.impl.ArticleServiceImpl;
 import com.yqg.service.impl.UserServiceImpl;
 import com.yqg.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     @Autowired
     private UserServiceImpl userService;
+    @Autowired
+    private ArticleServiceImpl articleService;
 
 
     @RequestMapping("/user/list")
@@ -47,5 +51,11 @@ public class AdminController {
     @DeleteMapping("/user/delete/{userId}")
     public String deleteUser(@PathVariable("userId") String userId) {
         return userService.adminDeleteUser(userId);
+    }
+
+    @PostMapping("/article/list")
+    public String getArticleList(@Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize,
+                                 @Param("orderBy") String orderBy,@Param("orderType") String orderType) {
+        return articleService.getPageArticleList(pageNum, pageSize,orderBy,orderType);
     }
 }

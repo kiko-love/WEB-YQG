@@ -27,4 +27,9 @@ public class CommentController {
     public String getCommentList() {
         return commentService.getAllComments();
     }
+
+    @DeleteMapping("/delete/{commentId}")
+    public String deleteComment(@PathVariable("commentId") String commentId) {
+        return commentService.deleteMyComment(commentId);
+    }
 }
