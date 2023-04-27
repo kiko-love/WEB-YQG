@@ -80,4 +80,18 @@ public interface ArticleMapper {
      * @return
      */
     List<RecommendArticle> getArticleList(Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据审核状态获取文章列表
+     * @param audit
+     * @return
+     */
+    List<RecommendArticle> getArticleListByAudit(Integer audit);
+
+    /**
+     * 删除文章
+     * @param articleId
+     * @return
+     */
+    int deleteArticle(String articleId);
 }

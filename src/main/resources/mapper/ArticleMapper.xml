@@ -138,7 +138,7 @@
         WHERE article_id = #{articleId}
     </update>
 
-    <update id="updateAudit" parameterType="string">
+    <update id="updateAudit">
         UPDATE article
         SET audit = #{audit}
         WHERE article_id = #{articleId}
@@ -188,4 +188,7 @@
         ORDER BY create_time DESC
     </select>
 
+    <delete id="deleteArticle">
+        DELETE FROM article WHERE article_id = #{articleId}
+    </delete>
 </mapper>

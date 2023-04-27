@@ -69,10 +69,45 @@ public class ArticleServiceImpl implements IArticleService {
         return articleMapper.getArticleList(pageNum, pageSize);
     }
 
+    @Override
+    public List<RecommendArticle> getArticleListByAudit(Integer audit) {
+        return articleMapper.getArticleListByAudit(audit);
+    }
 
-    public String getPageArticleList(Integer pageNum, Integer pageSize,String orderBy,String orderType) {
+    @Override
+    public int deleteArticle(String articleId) {
+        return articleMapper.deleteArticle(articleId);
+    }
+
+    public String delArticle(String articleId) {
+        int result = articleMapper.deleteArticle(articleId);
+        if (result > 0) {
+            return Result.success(null);
+        }
+        return Result.error("文章删除失败");
+    }
+
+    public String getDiffAuditArticleList(Integer audit, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<RecommendArticle> articleList = null;
+        if (audit == 100) {
+            articleList = articleMapper.getArticleList(pageNum, pageSize);
+        } else {
+            articleList = articleMapper.getArticleListByAudit(audit);
+        }
+        PageInfo<RecommendArticle> pageInfo = new PageInfo<>(articleList);
+        if (articleList.size() > 0) {
+            Map<String, Object> map = new HashMap<>(16);
+            map.put("total", pageInfo.getTotal());
+            map.put("list", articleList);
+            return Result.success(map);
+        }
+        return Result.error("文章列表为空");
+    }
+
+    public String getPageArticleList(Integer pageNum, Integer pageSize, String orderBy, String orderType) {
         //只允许指定的字段排序，防止sql注入
-        String[] orderByArr = {"create_time", "update_time","audit","read_count","like_count","comment_count","audit"};
+        String[] orderByArr = {"create_time", "update_time", "audit", "read_count", "like_count", "comment_count", "audit"};
         String orderByStr = "";
         if (StringUtils.isNotEmpty(orderBy) && Arrays.asList(orderByArr).contains(orderBy.toLowerCase())) {
             orderByStr = String.format("%s %s", orderBy.toLowerCase(), "asc".equalsIgnoreCase(orderType) ? "asc" : "desc");
@@ -80,7 +115,7 @@ public class ArticleServiceImpl implements IArticleService {
             // 默认排序
             orderByStr = "";
         }
-        PageHelper.startPage(pageNum, pageSize,orderByStr);
+        PageHelper.startPage(pageNum, pageSize, orderByStr);
         List<RecommendArticle> articleList = articleMapper.getArticleList(pageNum, pageSize);
         PageInfo<RecommendArticle> pageInfo = new PageInfo<>(articleList);
         if (articleList.size() > 0) {

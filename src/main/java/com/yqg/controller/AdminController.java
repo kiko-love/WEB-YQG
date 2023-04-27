@@ -58,4 +58,20 @@ public class AdminController {
                                  @Param("orderBy") String orderBy,@Param("orderType") String orderType) {
         return articleService.getPageArticleList(pageNum, pageSize,orderBy,orderType);
     }
+
+    @GetMapping("/article/list/{audit}/{pageNum}/{pageSize}")
+    public String getArticleListByAudit(@PathVariable("audit") Integer audit, @PathVariable("pageNum") Integer pageNum,
+                                        @PathVariable("pageSize") Integer pageSize) {
+        return articleService.getDiffAuditArticleList(audit,pageNum,pageSize);
+    }
+
+    @PostMapping("/article/updateAudit")
+    public String updateArticleAudit(@RequestParam("articleId") String articleId, @RequestParam("audit") Integer audit) {
+        return articleService.updateArticleAudit(articleId, audit);
+    }
+
+    @DeleteMapping("/article/delete/{articleId}")
+    public String deleteArticle(@PathVariable("articleId") String articleId) {
+        return articleService.delArticle(articleId);
+    }
 }
