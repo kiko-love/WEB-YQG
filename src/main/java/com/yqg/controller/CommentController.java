@@ -8,6 +8,8 @@ import com.yqg.vo.Comment;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 /**
  * @author Administrator
  */
@@ -31,5 +33,10 @@ public class CommentController {
     @DeleteMapping("/delete/{commentId}")
     public String deleteComment(@PathVariable("commentId") String commentId) {
         return commentService.deleteMyComment(commentId);
+    }
+
+    @PostMapping("/linkInfo")
+    public String getLinkInfo(@RequestParam("url") String url) throws IOException {
+        return commentService.getUrlInfo(url);
     }
 }

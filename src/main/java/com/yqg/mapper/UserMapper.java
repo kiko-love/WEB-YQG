@@ -1,6 +1,7 @@
 package com.yqg.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yqg.vo.HotUser;
 import com.yqg.vo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -72,6 +73,12 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     int updateUser(User user);
+
+    /**
+     * 获取热门用户列表
+     * @return
+     */
+    List<HotUser> getHotUser();
 
 
 }

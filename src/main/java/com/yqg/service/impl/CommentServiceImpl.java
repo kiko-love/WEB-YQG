@@ -9,15 +9,28 @@ import com.yqg.vo.ActionComment;
 import com.yqg.vo.Comment;
 import com.yqg.vo.Topic;
 import jakarta.annotation.Resource;
+import org.apache.catalina.connector.Response;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Administrator
  */
 @Service
 public class CommentServiceImpl implements ICommentService {
+    public static final int URL_COMPONENTS_MINIMUM_LENGTH = 3;
 
     @Resource
     private CommentMapper commentMapper;
@@ -75,4 +88,61 @@ public class CommentServiceImpl implements ICommentService {
     public int deleteComment(String commentId) {
         return commentMapper.deleteComment(commentId);
     }
+
+    public String getUrlInfo(String url) throws IOException {
+        Map<String, String> websiteData = new HashMap<>(16);
+        String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3";
+        try {
+            Connection.Request request = Jsoup.connect(url)
+                    .userAgent(userAgent)
+                    .request();
+            request.followRedirects(false);
+            Connection.Response response = Jsoup.connect(request.url().toString())
+                    .cookies(request.cookies())
+                    .headers(request.headers())
+                    .method(request.method())
+                    .data(request.data())
+                    .execute();
+            Document document = response.parse();
+            String title = document.title();
+            String domain = getDomainFromUrl(url);
+            String favicon = getFaviconFromDocument(document, domain);
+            websiteData.put("title", title);
+            websiteData.put("domain", domain);
+            websiteData.put("favicon", favicon);
+        } catch (
+                Exception e) {
+            e.printStackTrace();
+        }
+        if (websiteData.size() == 0) {
+            return Result.error("获取失败");
+        }
+        return Result.success(websiteData);
+    }
+
+    public static String getDomainFromUrl(String url) {
+        String[] parts = url.split("/");
+        String domain = "";
+        if (parts.length >= URL_COMPONENTS_MINIMUM_LENGTH) {
+            domain = parts[2];
+        }
+        return domain;
+    }
+
+    public static String getFaviconFromDocument(Document document, String domain) {
+        Elements linkTags = document.select("link[href]");
+        String faviconUrl = "";
+        for (Element tag : linkTags) {
+            String rel = tag.attr("rel");
+            if (rel.contains("shortcut") || rel.contains("icon")) {
+                faviconUrl = tag.absUrl("href");
+                break;
+            }
+        }
+        if ("".equals(faviconUrl)) {
+            faviconUrl = "https://www.google.com/s2/favicons?domain=" + domain;
+        }
+        return faviconUrl;
+    }
+
 }

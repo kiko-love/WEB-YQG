@@ -53,4 +53,26 @@
         WHERE user_id = #{userId}
     </update>
 
+    <select id="getHotUser" resultType="com.yqg.vo.HotUser">
+        SELECT u.user_id,
+               u.user_name,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_level,
+               COUNT(a.article_id)                                                         AS article_count,
+               SUM(a.like_count)                                                           AS like_count_sum,
+               SUM(a.read_count)                                                           AS read_count_sum,
+               SUM(a.comment_count)                                                        AS comment_count_sum,
+               ((COUNT(a.article_id) * 5) + (SUM(a.like_count) * 3.5) + (SUM(a.comment_count) * 2) +
+                (SUM(a.read_count) * 0.5) + (u.user_exp * 0.0001) + (u.login_times * 0.5)) AS hot_score
+        FROM db_yqg.user u
+                 LEFT JOIN db_yqg.article a ON u.user_id = a.user_id
+        GROUP BY u.user_id,
+                 u.user_name,
+                 u.user_avatar_url,
+                 u.user_des,
+                 u.user_level
+        ORDER BY hot_score DESC LIMIT 3;
+    </select>
+
 </mapper>

@@ -1,6 +1,7 @@
 package com.yqg.controller;
 
 import com.yqg.service.impl.ArticleServiceImpl;
+import com.yqg.service.impl.ResourceServicesImpl;
 import com.yqg.service.impl.UserServiceImpl;
 import com.yqg.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class AdminController {
     private UserServiceImpl userService;
     @Autowired
     private ArticleServiceImpl articleService;
+
+    @Autowired
+    private ResourceServicesImpl resourceServices;
 
 
     @RequestMapping("/user/list")
@@ -73,5 +77,15 @@ public class AdminController {
     @DeleteMapping("/article/delete/{articleId}")
     public String deleteArticle(@PathVariable("articleId") String articleId) {
         return articleService.delArticle(articleId);
+    }
+
+    @PostMapping("/resource/audit")
+    public String updateResourceAudit(@RequestParam("fileId") String fileId, @RequestParam("audit") Integer audit) {
+        return resourceServices.updateResourceAudit(fileId, audit);
+    }
+
+    @DeleteMapping("/resource/delete/{fileId}")
+    public String deleteResource(@PathVariable("fileId") String fileId) {
+        return resourceServices.deleteResource(fileId);
     }
 }

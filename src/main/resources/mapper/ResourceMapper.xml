@@ -34,7 +34,7 @@
     <update id="updateStatusById">
         update resources
         set status = #{status}
-        where id = #{id}
+        where id = #{fileId}
     </update>
 
     <select id="getResourcesById" resultType="com.yqg.vo.UploadResource">
@@ -124,5 +124,10 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
+
+    <delete id="deleteResourceById">
+        delete from resources
+        where id = #{fileId}
+    </delete>
 
 </mapper>

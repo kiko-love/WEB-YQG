@@ -15,6 +15,7 @@ import com.yqg.service.IEmailService;
 import com.yqg.service.IUserService;
 import com.yqg.utils.RedisUtils;
 import com.yqg.utils.UniqueIdGeneratorUtils;
+import com.yqg.vo.HotUser;
 import com.yqg.vo.User;
 import com.yqg.vo.UserBase;
 import lombok.extern.slf4j.Slf4j;
@@ -136,6 +137,14 @@ public class UserServiceImpl implements IUserService {
         return userMapper.deleteUser(userId);
     }
 
+    @Override
+    public List<HotUser> getHotUser() {
+        return userMapper.getHotUser();
+    }
+
+    public String getHotUserList(){
+        return Result.success(getHotUser());
+    }
 
     public String updateUser(User user) {
         int i = userMapper.updateUser(user);

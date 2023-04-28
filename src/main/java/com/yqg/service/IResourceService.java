@@ -48,4 +48,19 @@ public interface IResourceService {
      * @return
      */
     List<UploadResource> getHotResource();
+
+    /**
+     * 更新资源审核状态
+     * @param fileId
+     * @param status
+     * @return
+     */
+    int updateStatusById(String fileId, Integer status);
+
+    /**
+     * 删除资源
+     * @param fileId
+     * @return
+     */
+    int deleteResourceById(String fileId);
 }

@@ -277,6 +277,40 @@ public class ResourceServicesImpl implements IResourceService {
         return checksum.getValue();
     }
 
+
+    public String updateResourceAudit(String fileId, Integer status) {
+        int i = resourceMapper.updateStatusById(fileId, status);
+        if (i == 0) {
+            return Result.error("资源审核失败");
+        }
+        return Result.success(null);
+    }
+
+    public String deleteResource(String fileId) {
+        UploadResource uploadResource = resourceMapper.getResourcesById(fileId);
+        if (uploadResource == null) {
+            return Result.error("资源不存在");
+        }
+        String fileType = uploadResource.getFileType();
+        String userId = uploadResource.getUserId();
+        String basePath = uploadDir + File.separator + fileType + File.separator + userId;
+        String fileName = fileId + getFileSuffix(Objects.requireNonNull(uploadResource.getRealName()));
+        String savePath = basePath + File.separator + fileName;
+        File file = new File(savePath);
+        if (!file.exists()) {
+            return Result.error("资源不存在");
+        }
+        boolean delete = file.delete();
+        if (!delete) {
+            return Result.error("资源删除失败");
+        }
+        int i = resourceMapper.deleteResourceById(fileId);
+        if (i == 0) {
+            return Result.error("资源删除失败");
+        }
+        return Result.success(null);
+    }
+
     @Override
     public List<UploadResource> getUploadResource(List<Long> resourceIds) {
         return resourceMapper.getUploadResource(resourceIds);
@@ -306,5 +340,15 @@ public class ResourceServicesImpl implements IResourceService {
     @Override
     public List<UploadResource> getHotResource() {
         return resourceMapper.getHotResource();
+    }
+
+    @Override
+    public int updateStatusById(String fileId, Integer status) {
+        return resourceMapper.updateStatusById(fileId, status);
+    }
+
+    @Override
+    public int deleteResourceById(String fileId) {
+        return resourceMapper.deleteResourceById(fileId);
     }
 }

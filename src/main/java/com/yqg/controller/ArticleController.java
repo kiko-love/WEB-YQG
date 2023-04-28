@@ -2,9 +2,11 @@ package com.yqg.controller;
 
 import com.yqg.service.impl.ArticleServiceImpl;
 import com.yqg.service.impl.UserArticleOperationServiceImpl;
+import com.yqg.service.impl.UserServiceImpl;
 import com.yqg.vo.Article;
 import jakarta.annotation.Resource;
 import org.apache.mahout.cf.taste.common.TasteException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -17,6 +19,9 @@ public class ArticleController {
     private UserArticleOperationServiceImpl userArticleOperationService;
     @Resource
     private ArticleServiceImpl articleService;
+
+    @Autowired
+    private UserServiceImpl userService;
 
     @RequestMapping("/list/{userId}/{type}")
     public String recommendArticles(@PathVariable("userId") String userId,
@@ -51,4 +56,8 @@ public class ArticleController {
     }
 
 
+    @GetMapping("/hotUserList")
+    public String getHotUserList() {
+        return userService.getHotUserList();
+    }
 }

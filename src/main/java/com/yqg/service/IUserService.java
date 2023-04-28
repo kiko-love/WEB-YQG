@@ -1,5 +1,6 @@
 package com.yqg.service;
 
+import com.yqg.vo.HotUser;
 import com.yqg.vo.User;
 
 import java.util.List;
@@ -37,5 +38,11 @@ public interface IUserService {
      * @return
      */
     int deleteUserById(String userId);
+
+    /**
+     * 获取热门用户列表
+     * @return
+     */
+    List<HotUser> getHotUser();
 
 }
