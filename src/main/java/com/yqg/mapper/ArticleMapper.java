@@ -94,4 +94,11 @@ public interface ArticleMapper {
      * @return
      */
     int deleteArticle(String articleId);
+
+    /**
+     * 根据关键字获取文章列表
+     * @param key
+     * @return
+     */
+    List<RecommendArticle> getListByKey(String key);
 }

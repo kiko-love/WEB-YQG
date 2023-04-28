@@ -75,4 +75,20 @@
         ORDER BY hot_score DESC LIMIT 3;
     </select>
 
+    <select id="getUserByKeyword" resultMap="searchUserMap">
+        SELECT * FROM user
+        WHERE user_name LIKE CONCAT('%',#{keyword},'%')
+    </select>
+
+    <resultMap id="searchUserMap" type="com.yqg.vo.User">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userAvatarUrl" column="user_avatar_url"/>
+        <result property="userDes" column="user_des"/>
+        <result property="userLevel" column="user_level"/>
+        <result property="userExp" column="user_exp"/>
+        <result property="userTags" column="user_tags"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
 </mapper>

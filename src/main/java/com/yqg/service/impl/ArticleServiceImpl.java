@@ -79,6 +79,19 @@ public class ArticleServiceImpl implements IArticleService {
         return articleMapper.deleteArticle(articleId);
     }
 
+    @Override
+    public List<RecommendArticle> getListByKey(String key) {
+        return articleMapper.getListByKey(key);
+    }
+
+    public String searchArticle(String key){
+        List<RecommendArticle> articleList = articleMapper.getListByKey(key);
+        if (articleList.size() > 0) {
+            return Result.success(articleList);
+        }
+        return Result.error("搜索结果为空");
+    }
+
     public String delArticle(String articleId) {
         int result = articleMapper.deleteArticle(articleId);
         if (result > 0) {

@@ -142,6 +142,15 @@ public class UserServiceImpl implements IUserService {
         return userMapper.getHotUser();
     }
 
+    @Override
+    public List<User> getUserByKeyword(String keyword) {
+        return userMapper.getUserByKeyword(keyword);
+    }
+
+    public String searchUserList(String key) {
+        return Result.success(getUserByKeyword(key));
+    }
+
     public String getHotUserList(){
         return Result.success(getHotUser());
     }

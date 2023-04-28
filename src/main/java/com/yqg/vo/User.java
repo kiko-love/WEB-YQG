@@ -17,6 +17,7 @@ public class User{
     String userAvatarUrl;
     String userDes;
     Integer userExp;
+    Integer userLevel;
     String userTags;
     @JsonIgnore
     String password;
@@ -24,6 +25,14 @@ public class User{
     String email;
     String roleId;
     String createTime;
+
+    public Integer getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(Integer userLevel) {
+        this.userLevel = userLevel;
+    }
 
     public User(String userId, String userName, String userAvatarUrl, String userDes, Integer userExp, String userTags, String password, Integer status, String email, String roleId, String createTime, Integer loginTimes, Integer integral) {
         this.userId = userId;

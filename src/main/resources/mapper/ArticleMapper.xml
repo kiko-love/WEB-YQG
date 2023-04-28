@@ -191,4 +191,22 @@
     <delete id="deleteArticle">
         DELETE FROM article WHERE article_id = #{articleId}
     </delete>
+    
+    <select id="getListByKey" resultMap="articleWithUserResultMap">
+        SELECT a.*,
+               u.user_name,
+               u.email,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.status,
+               u.login_times,
+               u.integral
+        FROM article a
+                 JOIN user u ON a.user_id = u.user_id
+        WHERE a.title LIKE CONCAT('%', #{key}, '%')
+           OR a.tags LIKE CONCAT('%', #{key}, '%')
+        ORDER BY create_time DESC
+    </select>
 </mapper>

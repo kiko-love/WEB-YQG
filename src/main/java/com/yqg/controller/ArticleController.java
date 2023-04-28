@@ -60,4 +60,6 @@ public class ArticleController {
     public String getHotUserList() {
         return userService.getHotUserList();
     }
+
+
 }

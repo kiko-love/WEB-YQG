@@ -45,4 +45,11 @@ public interface IUserService {
      */
     List<HotUser> getHotUser();
 
+    /**
+     * 通过关键字获取用户
+     * @param keyword
+     * @return
+     */
+    List<User> getUserByKeyword(String keyword);
+
 }
