@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yqg.R.NomalEnum;
 import com.yqg.R.Result;
 import com.yqg.R.ResultEnum;
@@ -147,8 +149,18 @@ public class UserServiceImpl implements IUserService {
         return userMapper.getUserByKeyword(keyword);
     }
 
-    public String searchUserList(String key) {
-        return Result.success(getUserByKeyword(key));
+    public String searchUserList(String key,Integer pageNum,Integer pageSize) {
+        if (key == null || key.isEmpty()) {
+            return Result.error("关键字不能为空");
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> userList = userMapper.getUserByKeyword(key);
+        PageInfo<User> pageInfo = new PageInfo<>(userList);
+        if (userList.size() > 0) {
+            return Result.success(userList);
+        } else {
+            return Result.error("未找到相关用户");
+        }
     }
 
     public String getHotUserList(){

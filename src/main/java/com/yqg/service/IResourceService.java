@@ -63,4 +63,11 @@ public interface IResourceService {
      * @return
      */
     int deleteResourceById(String fileId);
+
+    /**
+     * 获取指定key的资源
+     * @param key
+     * @return
+     */
+    List<UploadResource> getResourcesByKey(String key);
 }

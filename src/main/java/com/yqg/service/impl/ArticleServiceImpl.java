@@ -84,8 +84,10 @@ public class ArticleServiceImpl implements IArticleService {
         return articleMapper.getListByKey(key);
     }
 
-    public String searchArticle(String key){
+    public String searchArticle(String key, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<RecommendArticle> articleList = articleMapper.getListByKey(key);
+        PageInfo<RecommendArticle> pageInfo = new PageInfo<>(articleList);
         if (articleList.size() > 0) {
             return Result.success(articleList);
         }

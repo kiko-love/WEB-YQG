@@ -17,16 +17,27 @@ public class SearchController {
     @Autowired
     private ArticleServiceImpl articleService;
     @Autowired
-    private ResourceServicesImpl recommendService;
+    private ResourceServicesImpl resourceServices;
 
-    @GetMapping("/article/{keyword}")
-    public String searchArticle(@PathVariable("keyword") String keyword) {
-        return articleService.searchArticle(keyword);
+    @GetMapping("/article/{keyword}/{pageNum}/{pageSize}")
+    public String searchArticle(@PathVariable("keyword") String keyword,
+                                @PathVariable("pageNum") int pageNum,
+                                @PathVariable("pageSize") int pageSize) {
+        return articleService.searchArticle(keyword, pageNum, pageSize);
     }
 
-    @GetMapping("/user/{keyword}")
-    public String searchUser(@PathVariable("keyword") String keyword) {
-        return userService.searchUserList(keyword);
+    @GetMapping("/user/{keyword}/{pageNum}/{pageSize}")
+    public String searchUser(@PathVariable("keyword") String keyword,
+                             @PathVariable("pageNum") int pageNum,
+                             @PathVariable("pageSize") int pageSize) {
+        return userService.searchUserList(keyword, pageNum, pageSize);
+    }
+
+    @GetMapping("/resource/{keyword}/{pageNum}/{pageSize}")
+    public String searchResource(@PathVariable("keyword") String keyword,
+                                 @PathVariable("pageNum") int pageNum,
+                                 @PathVariable("pageSize") int pageSize) {
+        return resourceServices.getResByKey(keyword, pageNum, pageSize);
     }
 
 }

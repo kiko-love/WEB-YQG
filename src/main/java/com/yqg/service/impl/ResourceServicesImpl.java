@@ -2,12 +2,13 @@ package com.yqg.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yqg.R.Result;
 import com.yqg.mapper.ResourceMapper;
 import com.yqg.service.IResourceService;
 import com.yqg.utils.FileTypeUtils;
 import com.yqg.vo.ActionResource;
-import com.yqg.vo.DetailArticle;
 import com.yqg.vo.UploadResource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -311,6 +312,19 @@ public class ResourceServicesImpl implements IResourceService {
         return Result.success(null);
     }
 
+    public String getResByKey(String key,Integer pageNum,Integer pageSize) {
+        if (key == null || "".equals(key)) {
+            return Result.error("关键字不能为空");
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        List<UploadResource> uploadResources = getResourcesByKey(key);
+        PageInfo<UploadResource> pageInfo = new PageInfo<>(uploadResources);
+        if (uploadResources.size() == 0) {
+            return Result.error("资源不存在");
+        }
+        return Result.success(uploadResources);
+    }
+
     @Override
     public List<UploadResource> getUploadResource(List<Long> resourceIds) {
         return resourceMapper.getUploadResource(resourceIds);
@@ -350,5 +364,10 @@ public class ResourceServicesImpl implements IResourceService {
     @Override
     public int deleteResourceById(String fileId) {
         return resourceMapper.deleteResourceById(fileId);
+    }
+
+    @Override
+    public List<UploadResource> getResourcesByKey(String key) {
+        return resourceMapper.getResourcesByKey(key);
     }
 }

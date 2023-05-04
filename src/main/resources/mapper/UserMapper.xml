@@ -76,8 +76,16 @@
     </select>
 
     <select id="getUserByKeyword" resultMap="searchUserMap">
-        SELECT * FROM user
-        WHERE user_name LIKE CONCAT('%',#{keyword},'%')
+        SELECT u.user_id,
+               u.user_name,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_level,
+               u.user_exp,
+               u.user_tags,
+               u.`status`
+        FROM user u
+        WHERE user_name LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
     <resultMap id="searchUserMap" type="com.yqg.vo.User">

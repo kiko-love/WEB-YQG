@@ -89,6 +89,31 @@ public class CommentServiceImpl implements ICommentService {
         return commentMapper.deleteComment(commentId);
     }
 
+    @Override
+    public List<ActionComment> getCommentListByHot() {
+        return commentMapper.getCommentListByHot();
+    }
+
+    @Override
+    public List<ActionComment> getCommentListByTopic(String topic) {
+        return commentMapper.getCommentListByTopic(topic);
+    }
+
+    public String getCommentByTopic(String topic) {
+        List<ActionComment> commentList = commentMapper.getCommentListByTopic(topic);
+        if (commentList == null || commentList.size() == 0) {
+            return Result.error("暂无评论");
+        }
+        return Result.success(commentList);
+    }
+    public String getHotCommentList() {
+        List<ActionComment> commentList = commentMapper.getCommentListByHot();
+        if (commentList == null || commentList.size() == 0) {
+            return Result.error("暂无评论");
+        }
+        return Result.success(commentList);
+    }
+
     public String getUrlInfo(String url) throws IOException {
         Map<String, String> websiteData = new HashMap<>(16);
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3";

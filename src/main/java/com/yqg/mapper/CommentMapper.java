@@ -37,4 +37,17 @@ public interface CommentMapper {
      * @return
      */
     int deleteComment(String commentId);
+
+    /**
+     * 获取热门评论
+     * @return
+     */
+    List<ActionComment> getCommentListByHot();
+
+    /**
+     * 根据话题获取评论列表
+     * @param topic
+     * @return
+     */
+    List<ActionComment> getCommentListByTopic(String topic);
 }

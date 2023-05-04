@@ -14,6 +14,45 @@
                 #{isDeleted})
     </insert>
 
+    <select id="getCommentListByTopic" resultMap="actionCommentMap">
+        SELECT c.*,
+               u.user_id,
+               u.user_name,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.status,
+               u.login_times,
+               u.integral
+        FROM comment c
+                 JOIN user u ON c.user_id = u.user_id
+        WHERE c.is_deleted = 0
+          AND parent_id = 0
+          AND topic = #{topic}
+        ORDER BY c.create_time DESC
+    </select>
+
+    <select id="getCommentListByHot" resultMap="actionCommentMap">
+        SELECT c.*,
+               u.user_name,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.STATUS,
+               u.login_times,
+               u.integral,
+               COALESCE(c.like_count * 1, 0) +
+               COALESCE((SELECT COUNT(*) FROM comment WHERE parent_id = c.comment_id) * 3, 0) +
+               COALESCE((TIMESTAMPDIFF(SECOND, c.create_time, NOW()) * -0.01), 0) AS hotness
+        FROM COMMENT c
+                 JOIN USER u ON c.user_id = u.user_id
+        WHERE c.is_deleted = 0
+          AND parent_id = 0
+        ORDER BY hotness DESC;
+    </select>
+
     <select id="getCommentList" resultMap="actionCommentMap">
         SELECT c.*,
                u.user_id,

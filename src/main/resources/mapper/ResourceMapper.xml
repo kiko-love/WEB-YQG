@@ -106,8 +106,16 @@
     </select>
 
     <select id="getHotResource" resultMap="hotResourceMap">
-        SELECT * FROM resources
+        SELECT *
+        FROM resources
         ORDER BY LOG10(view_count) * 0.3 + LOG10(like_count + 1) * 0.4 + LOG10(download_count + 1) * 0.3 DESC
+    </select>
+    <select id="getResourcesByKey" resultMap="hotResourceMap">
+        select *
+        from resources
+        where title like concat('%', #{key}, '%')
+           or description like concat('%', #{key}, '%')
+           or tags like concat('%', #{key}, '%')
     </select>
     <resultMap id="hotResourceMap" type="com.yqg.vo.UploadResource">
         <id column="id" property="id"/>
@@ -126,8 +134,10 @@
     </resultMap>
 
     <delete id="deleteResourceById">
-        delete from resources
+        delete
+        from resources
         where id = #{fileId}
     </delete>
+
 
 </mapper>

@@ -39,4 +39,14 @@ public class CommentController {
     public String getLinkInfo(@RequestParam("url") String url) throws IOException {
         return commentService.getUrlInfo(url);
     }
+
+    @RequestMapping("/list/hot")
+    public String getHotCommentList() {
+        return commentService.getHotCommentList();
+    }
+
+    @GetMapping("/list/topic/{topic}")
+    public String getCommentListByTopic(@PathVariable("topic") String topic) {
+        return commentService.getCommentByTopic(topic);
+    }
 }
