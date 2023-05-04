@@ -102,5 +102,56 @@
         where comment_id = #{commentId}
     </delete>
 
+    <select id="getHotComments" resultType="com.yqg.vo.HotComment">
+        SELECT c.comment_id,
+               c.content,
+               c.like_count,
+               c.comment_count,
+               c.topic,
+               ROUND(((c.like_count + 1) / POW((c.comment_count + 1), 1.5)), 2) AS hot
+        FROM COMMENT c
+        ORDER BY hot DESC LIMIT 3
+
+    </select>
+
+    <select id="getCommentById" resultType="com.yqg.vo.Comment">
+        SELECT *
+        FROM comment
+        WHERE comment_id = #{commentId}
+    </select>
+
+    <update id="updateComment">
+        UPDATE comment
+        SET content = #{content},
+            is_deleted = #{isDeleted},
+            like_count = #{likeCount},
+            comment_count = #{commentCount},
+            topic = #{topic},
+            parent_id = #{parentId},
+            article_id = #{articleId},
+            link = #{link},
+            user_id = #{userId},
+            create_time = #{createTime},
+            is_deleted = #{isDeleted}
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <select id="getChildrenComment" resultMap="actionCommentMap">
+        SELECT c.*,
+               u.user_id,
+               u.user_name,
+               u.user_avatar_url,
+               u.user_des,
+               u.user_exp,
+               u.user_tags,
+               u.status,
+               u.login_times,
+               u.integral
+        FROM comment c
+                 JOIN user u ON c.user_id = u.user_id
+        WHERE parent_id = #{parentId}
+        ORDER BY c.create_time DESC
+    </select>
+
 
 </mapper>

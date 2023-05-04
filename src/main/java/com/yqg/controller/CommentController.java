@@ -1,8 +1,6 @@
 package com.yqg.controller;
 
 
-import com.yqg.mapper.CommentMapper;
-import com.yqg.service.ICommentService;
 import com.yqg.service.impl.CommentServiceImpl;
 import com.yqg.vo.Comment;
 import jakarta.annotation.Resource;
@@ -25,10 +23,9 @@ public class CommentController {
         return commentService.addNewComment(comment);
     }
 
-    @GetMapping("/list/{pageNum}/{pageSize}")
-    public String getCommentList(@PathVariable("pageNum") Integer pageNum,
-                                 @PathVariable("pageSize") Integer pageSize) {
-        return commentService.getAllComments(pageNum, pageSize);
+    @GetMapping("/list")
+    public String getCommentList() {
+        return commentService.getAllComments();
     }
 
     @DeleteMapping("/delete/{commentId}")
@@ -39,18 +36,5 @@ public class CommentController {
     @PostMapping("/linkInfo")
     public String getLinkInfo(@RequestParam("url") String url) throws IOException {
         return commentService.getUrlInfo(url);
-    }
-
-    @GetMapping("/list/hot/{pageNum}/{pageSize}")
-    public String getHotCommentList(@PathVariable("pageNum") Integer pageNum,
-                                    @PathVariable("pageSize") Integer pageSize) {
-        return commentService.getHotCommentList(pageNum, pageSize);
-    }
-
-    @GetMapping("/list/topic/{topic}/{pageNum}/{pageSize}")
-    public String getCommentListByTopic(@PathVariable("topic") String topic,
-                                        @PathVariable("pageNum") Integer pageNum,
-                                        @PathVariable("pageSize") Integer pageSize) {
-        return commentService.getCommentByTopic(topic, pageNum, pageSize);
     }
 }

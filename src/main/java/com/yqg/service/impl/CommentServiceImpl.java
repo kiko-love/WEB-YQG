@@ -2,8 +2,6 @@ package com.yqg.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.yqg.R.Result;
 import com.yqg.mapper.CommentMapper;
 import com.yqg.service.ICommentService;
@@ -54,11 +52,9 @@ public class CommentServiceImpl implements ICommentService {
 
     }
 
-    public String getAllComments(Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
+    public String getAllComments() {
         List<ActionComment> commentList = commentMapper.getCommentList();
-        PageInfo<ActionComment> pageInfo = new PageInfo<>(commentList);
-        if (commentList.size() == 0) {
+        if (commentList == null || commentList.size() == 0) {
             return Result.error("暂无评论");
         }
         return Result.success(commentList);
@@ -91,35 +87,6 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public int deleteComment(String commentId) {
         return commentMapper.deleteComment(commentId);
-    }
-
-    @Override
-    public List<ActionComment> getCommentListByHot() {
-        return commentMapper.getCommentListByHot();
-    }
-
-    @Override
-    public List<ActionComment> getCommentListByTopic(String topic) {
-        return commentMapper.getCommentListByTopic(topic);
-    }
-
-    public String getCommentByTopic(String topic, Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<ActionComment> commentList = commentMapper.getCommentListByTopic(topic);
-        PageInfo<ActionComment> pageInfo = new PageInfo<>(commentList);
-        if (commentList.size() == 0) {
-            return Result.error("暂无评论");
-        }
-        return Result.success(commentList);
-    }
-    public String getHotCommentList(Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<ActionComment> commentList = commentMapper.getCommentListByHot();
-        PageInfo<ActionComment> pageInfo = new PageInfo<>(commentList);
-        if (commentList.size() == 0) {
-            return Result.error("暂无评论");
-        }
-        return Result.success(commentList);
     }
 
     public String getUrlInfo(String url) throws IOException {
