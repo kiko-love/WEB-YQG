@@ -50,7 +50,7 @@
                  JOIN USER u ON c.user_id = u.user_id
         WHERE c.is_deleted = 0
           AND parent_id = 0
-        ORDER BY hotness DESC;
+        ORDER BY hotness DESC
     </select>
 
     <select id="getCommentList" resultMap="actionCommentMap">

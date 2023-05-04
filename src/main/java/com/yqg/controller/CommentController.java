@@ -41,13 +41,16 @@ public class CommentController {
         return commentService.getUrlInfo(url);
     }
 
-    @RequestMapping("/list/hot")
-    public String getHotCommentList() {
-        return commentService.getHotCommentList();
+    @GetMapping("/list/hot/{pageNum}/{pageSize}")
+    public String getHotCommentList(@PathVariable("pageNum") Integer pageNum,
+                                    @PathVariable("pageSize") Integer pageSize) {
+        return commentService.getHotCommentList(pageNum, pageSize);
     }
 
-    @GetMapping("/list/topic/{topic}")
-    public String getCommentListByTopic(@PathVariable("topic") String topic) {
-        return commentService.getCommentByTopic(topic);
+    @GetMapping("/list/topic/{topic}/{pageNum}/{pageSize}")
+    public String getCommentListByTopic(@PathVariable("topic") String topic,
+                                        @PathVariable("pageNum") Integer pageNum,
+                                        @PathVariable("pageSize") Integer pageSize) {
+        return commentService.getCommentByTopic(topic, pageNum, pageSize);
     }
 }

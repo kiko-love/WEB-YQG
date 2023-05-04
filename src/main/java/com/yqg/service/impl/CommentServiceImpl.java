@@ -103,16 +103,20 @@ public class CommentServiceImpl implements ICommentService {
         return commentMapper.getCommentListByTopic(topic);
     }
 
-    public String getCommentByTopic(String topic) {
+    public String getCommentByTopic(String topic, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<ActionComment> commentList = commentMapper.getCommentListByTopic(topic);
-        if (commentList == null || commentList.size() == 0) {
+        PageInfo<ActionComment> pageInfo = new PageInfo<>(commentList);
+        if (commentList.size() == 0) {
             return Result.error("暂无评论");
         }
         return Result.success(commentList);
     }
-    public String getHotCommentList() {
+    public String getHotCommentList(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<ActionComment> commentList = commentMapper.getCommentListByHot();
-        if (commentList == null || commentList.size() == 0) {
+        PageInfo<ActionComment> pageInfo = new PageInfo<>(commentList);
+        if (commentList.size() == 0) {
             return Result.error("暂无评论");
         }
         return Result.success(commentList);
