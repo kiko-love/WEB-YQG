@@ -25,9 +25,10 @@ public class CommentController {
         return commentService.addNewComment(comment);
     }
 
-    @GetMapping("/list")
-    public String getCommentList() {
-        return commentService.getAllComments();
+    @GetMapping("/list/{pageNum}/{pageSize}")
+    public String getCommentList(@PathVariable("pageNum") Integer pageNum,
+                                 @PathVariable("pageSize") Integer pageSize) {
+        return commentService.getAllComments(pageNum, pageSize);
     }
 
     @DeleteMapping("/delete/{commentId}")

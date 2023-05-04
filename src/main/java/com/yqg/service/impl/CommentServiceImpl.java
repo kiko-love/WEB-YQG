@@ -2,6 +2,8 @@ package com.yqg.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yqg.R.Result;
 import com.yqg.mapper.CommentMapper;
 import com.yqg.service.ICommentService;
@@ -52,9 +54,11 @@ public class CommentServiceImpl implements ICommentService {
 
     }
 
-    public String getAllComments() {
+    public String getAllComments(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<ActionComment> commentList = commentMapper.getCommentList();
-        if (commentList == null || commentList.size() == 0) {
+        PageInfo<ActionComment> pageInfo = new PageInfo<>(commentList);
+        if (commentList.size() == 0) {
             return Result.error("暂无评论");
         }
         return Result.success(commentList);
